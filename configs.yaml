@@ -1,0 +1,33 @@
+Training:
+  train_test_split_size: 0.8
+  accelerator: "gpu"
+  seed: 42
+  epochs: 40
+  n_fold: 5
+  batch_size: 64
+  early_stopping: 5
+  wokers: 0
+  save_path: ./save_models/
+  data_config:
+    input_data_name: "Bleached Softwood Kraft Pulp Futures Historical Data.csv"
+    target: "Price"
+    drop_cols:
+    features:
+    use_standardization: False
+  model_nn:
+    lr: 1e-2
+    n_hidden:
+      - 16
+      - 32
+      - 32
+      - 16
+    weight_decay: 1e-3
+    dropout:
+      - 0.1
+      - 0.2
+      - 0.3
+  scheduler:
+    type: "ReduceLROnPlateau"
+    factor: 0.5
+    patience: 10
+    min_lr: 1e-5
