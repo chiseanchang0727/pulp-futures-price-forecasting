@@ -41,5 +41,5 @@ pythoh main.py --model eval --save
 ```
 
 ### Hyperparameter configuration
-Hyperparameters are stored in the `./configs.yaml` file.
+Hyperparameters are stored in the `./configs_mlp.yaml` file.
 
