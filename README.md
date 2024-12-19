@@ -17,21 +17,23 @@ This repository contains a project aimed at building a model to predict the futu
 ## Installation
 To get started, clone the repository and install the required dependencies:
 
-```bash
+```
 git clone https://github.com/your-username/pulp-futures-price-forecasting.git
 cd pulp-futures-price-forecasting
 pip install -r requirements.txt
-
+```
 
 ## Usage
 
 ### Training
-```bash
+```
 python main.py --mode train
+```
 
 ### Evaluation
-```bash
+```
 python main.py --mode eval
+```
 
 ### Hyperparameter configuration
 Hyperparameters are stored in the ./configs.yaml file.
