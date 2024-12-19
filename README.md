@@ -35,6 +35,11 @@ python main.py --mode train
 python main.py --mode eval
 ```
 
+### Save the model weights
+```
+pythoh main.py --model eval --save
+```
+
 ### Hyperparameter configuration
 Hyperparameters are stored in the ./configs.yaml file.
 
