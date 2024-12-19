@@ -2,8 +2,6 @@
 
 This repository contains a project aimed at building a model to predict the futures price of Bleached Softwood Kraft Pulp. The project is designed for iterative development, with the initial focus on setting up training and evaluation pipelines. Feature engineering and advanced modeling techniques will be implemented in subsequent phases.
 
-"test"
-
 ---
 
 ## Features
