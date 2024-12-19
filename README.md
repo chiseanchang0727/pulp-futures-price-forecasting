@@ -2,9 +2,12 @@
 
 This repository contains a project aimed at building a model to predict the futures price of Bleached Softwood Kraft Pulp. The project is designed for iterative development, with the initial focus on setting up training and evaluation pipelines. Feature engineering and advanced modeling techniques will be implemented in subsequent phases.
 
+"test"
+
 ---
 
 ## Features
+
 - Predicts futures prices for Bleached Softwood Kraft Pulp.
 - Initial model: Multi-Layer Perceptron (MLP).
 - Upcoming enhancements:
@@ -15,6 +18,7 @@ This repository contains a project aimed at building a model to predict the futu
 ---
 
 ## Installation
+
 To get started, clone the repository and install the required dependencies:
 
 ```
@@ -26,20 +30,23 @@ pip install -r requirements.txt
 ## Usage
 
 ### Training
+
 ```
 python main.py --mode train
 ```
 
 ### Evaluation
+
 ```
 python main.py --mode eval
 ```
 
 ### Save the model weights
+
 ```
 pythoh main.py --model eval --save
 ```
 
 ### Hyperparameter configuration
-Hyperparameters are stored in the `./configs_mlp.yaml` file.
 
+Hyperparameters are stored in the `./configs_mlp.yaml` file.
