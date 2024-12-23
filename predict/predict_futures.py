@@ -16,7 +16,7 @@ def predict(df, config, device, model_path="/save_models/model.pth"):
     Returns:
         predictions: The predicted values as a NumPy array.
     """
-    # Set the seed for reproducibility
+
     set_seed(config.seed)
 
     # Prepare the test dataset
@@ -33,7 +33,7 @@ def predict(df, config, device, model_path="/save_models/model.pth"):
 
     predictions = []
 
-    # Make predictions
+
     with torch.no_grad():
         for batch in test_loader:
             inputs = batch[0].to(device)
