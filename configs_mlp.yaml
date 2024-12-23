@@ -12,6 +12,11 @@ Training:
     input_data_name: "Bleached Softwood Kraft Pulp Futures Historical Data.csv"
     target: "Price"
     drop_cols:
+      - Open
+      - High
+      - Low
+      - Vol.
+      - Change %
     features:
     use_standardization: False
   model_nn:
@@ -31,3 +36,6 @@ Training:
     factor: 0.5
     patience: 10
     min_lr: 1e-5
+
+Prediction:
+  timewindow: 30 # in days

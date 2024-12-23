@@ -6,9 +6,12 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))) # Add the project root to PYTHONPATH
 from utils.utils import YamlLoader
 
-from preprocessing.preprocessing import data_preprocessing
+from data_modules.preprocessing import data_preprocessing
 from training.train_module import train
 from training.eval_module import evaluate
+
+from data_modules.data_for_prediction import create_data_for_prediction
+from predict.predict_futures import predict
 
 def get_argument():
     parser = argparse.ArgumentParser()
@@ -38,10 +41,16 @@ def main():
     
     # df_preprocessed.to_csv('./predictor/data/processed_data.csv')
 
+
+    # data for prediction
+    pred_idx = create_data_for_prediction()
+
     if args.mode == 'train':
         train(df_preprocessed, config=trainig_configs, mode=args.mode)
     elif args.mode == 'eval':
         evaluate(df_preprocessed, config=trainig_configs, mode=args.mode, save=args.save)
+    elif args.mode == 'predict':
+        predict()
     
     print('end')
 
