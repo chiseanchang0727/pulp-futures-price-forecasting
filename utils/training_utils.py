@@ -18,13 +18,13 @@ def train_one_epoch(model, loader, optimizer, criterion, device):
 
 
 
-def evalute_model(model, loader, criterion, device):
+def evaluate_model(model, loader, criterion, device):
     model.eval()
-    val_loss = 0.0
+    test_loss = 0.0
     with torch.no_grad():
-        for X_val, y_val in loader:
-            X_val, y_val = X_val.to(device), y_val.to(device)
-            val_outputs = model(X_val)
-            val_loss += criterion(val_outputs, y_val).item()
+        for X_test, y_test in loader:
+            X_test, y_test = X_test.to(device), y_test.to(device)
+            outputs = model(X_test)
+            test_loss += criterion(outputs, y_test).item()
 
-    return val_loss / len(loader)
+    return test_loss / len(loader), outputs

@@ -4,7 +4,7 @@ from config.train_configs import TrainingConfig
 from training.data_loader import DataModule
 from utils.utils import set_seed
 from utils.model_utils import create_mlp_model
-from utils.training_utils import train_one_epoch, evalute_model
+from utils.training_utils import train_one_epoch, evaluate_model
 
 def train(df, config: TrainingConfig, mode):
     
@@ -18,9 +18,6 @@ def train(df, config: TrainingConfig, mode):
     total_val_loss = 0.0
 
     for fold in range(config.n_fold):
-
-        # train_loader = data_module.train_loader(fold)
-        # valid_loader = data_module.valid_loader(fold)
 
         train_loader, valid_loader = data_module.get_fold_loader(fold, num_workers=config.wokers)
 
@@ -39,7 +36,7 @@ def train(df, config: TrainingConfig, mode):
 
             avg_train_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
             
-            avg_val_loss = evalute_model(model, valid_loader, criterion, device)
+            avg_val_loss = evaluate_model(model, valid_loader, criterion, device)
 
             scheular.step(avg_val_loss)
 

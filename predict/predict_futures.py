@@ -1,9 +1,9 @@
 import torch
-from torch.utils.data import DataLoader, TensorDataset
+from config.train_configs import TrainingConfig
 from utils.model_utils import create_mlp_model
 from utils.utils import set_seed
 
-def predict(df, config, device, model_path="/save_models/model.pth"):
+def predict(df, config: TrainingConfig, data_loader, device, model_path):
     """
     Function to predict results using the saved model.
 
@@ -20,9 +20,7 @@ def predict(df, config, device, model_path="/save_models/model.pth"):
     set_seed(config.seed)
 
     # Prepare the test dataset
-    test_features = df.drop(columns=config.target_column).values  # Assuming `target_column` exists in config
-    test_dataset = TensorDataset(torch.tensor(test_features, dtype=torch.float32))
-    test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False)
+    test_features = df.drop(columns=config.data_config.target).values  
 
     # Load the model
     input_size = test_features.shape[1]
@@ -35,7 +33,7 @@ def predict(df, config, device, model_path="/save_models/model.pth"):
 
 
     with torch.no_grad():
-        for batch in test_loader:
+        for batch in data_loader:
             inputs = batch[0].to(device)
             outputs = model(inputs)
             predictions.extend(outputs.cpu().numpy())

@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from config.data_configs import DataConfig
 from config.ml_configs import NNHyperparameters
 from config.scheduler_configs import SchedulerConfig
+from typing import List, Optional
 
 class TrainingConfig(BaseModel):
     data_config: DataConfig = Field(
@@ -48,7 +49,7 @@ class TrainingConfig(BaseModel):
         description="Early stop the training if no improvement."
     )
 
-    save_path: str = Field(
+    model_save_path: str = Field(
         default=None,
         description='Directory for saving the model weights.'
     )

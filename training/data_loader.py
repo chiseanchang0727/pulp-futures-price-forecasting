@@ -39,16 +39,19 @@ class DataModule(nn.Module):
         super().__init__()
         self.config = config
         if mode == 'train':
-            split_idx = math.floor(len(df)*config.train_test_split_size)
-            self.df_train = df[:split_idx]
-            self.df_test = df[split_idx:]
+            # split_idx = math.floor(len(df)*config.train_test_split_size)
+            # self.df_train = df[:split_idx]
+            # self.df_test = df[split_idx:]
+
+            self.df_train, self.df_test = self.custom_train_test_split(df, config=self.config)
             self.n_fold = config.n_fold
-            self.setup()
+            self.cv_setup()
             
         elif mode == 'eval':
-            split_idx = math.floor(len(df)*config.train_test_split_size)
-            self.df_train = df[:split_idx]
-            self.df_test = df[split_idx:]
+            # split_idx = math.floor(len(df)*config.train_test_split_size)
+            # self.df_train = df[:split_idx]
+            # self.df_test = df[split_idx:]
+            self.df_train, self.df_test = self.custom_train_test_split(df, config=self.config)
             
         elif mode == 'predict':
             self.df_all = df
@@ -59,13 +62,13 @@ class DataModule(nn.Module):
         # initial the datasets as None
         self.tain_dataset = None
         self.valid_dataset = None
+        self.test_dataset = None
 
         self.features = df.drop(config.data_config.target, axis=1).columns
         self.target = config.data_config.target
-        
-        self.num_features = self.df_train.select_dtypes(include=['float64', 'int64']).columns
+        self.num_features = df.select_dtypes(include=['float64', 'int64']).columns
 
-    def setup(self, test_days=30):    
+    def cv_setup(self, test_days=30):    
         self.index_dict = {}
         # use TimeSeriesSplit to separate train and valid datasets
         tss = TimeSeriesSplit(n_splits=self.n_fold, test_size=test_days)
@@ -74,6 +77,13 @@ class DataModule(nn.Module):
                 "train_idx": train_idx,
                 "val_idx": val_idx
             }
+
+    def custom_train_test_split(self, df, config: TrainingConfig):
+        split_idx = math.floor(len(df)*config.train_test_split_size)
+        df_train = df[:split_idx]
+        df_test = df[split_idx:]
+
+        return df_train, df_test
 
     def get_fold_loader(self, fold, num_workers):
 
@@ -105,7 +115,7 @@ class DataModule(nn.Module):
 
         return train_loader, valid_loader
 
-    def get_full_data_loader(self, num_workers):
+    def get_train_test_data_loader(self, num_workers):
         
         scaler = StandardScaler() if self.config.data_config.use_standardization else MinMaxScaler()
         self.df_train.loc[:, self.num_features] = scaler.fit_transform(self.df_train[self.num_features])
@@ -129,26 +139,8 @@ class DataModule(nn.Module):
         test_loader = DataLoader(test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=num_workers)
 
         return full_train_data_loader, test_loader
-
-    # def test_loader(self, num_workers):
-    #     test_dataset = CustomDataset(
-    #         self.df_test,
-    #         features=self.features,
-    #         target=self.target,
-    #         accelerator=self.accelerator
-    #     )
-    #     return DataLoader(test_dataset, batch_size=self.batch_size, shuffle=False, num_workers=num_workers)
-        
-    # def full_train_data_loader(self, num_workers):
-    #     self.full_train_dataset = CustomDataset(
-    #         self.df_train,
-    #         features=self.features,
-    #         target=self.target, 
-    #         accelerator=self.accelerator
-    #     )
-    #     return DataLoader(self.full_train_dataset, batch_size=self.batch_size, shuffle=False, num_workers=num_workers)
     
-    def full_data_loader(self, num_workers):
+    def input_data_loader_for_prediction(self, num_workers):
         full_dataset = CustomDataset(
             self.df_all,
             features=self.features,

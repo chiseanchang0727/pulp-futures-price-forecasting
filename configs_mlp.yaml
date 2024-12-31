@@ -7,7 +7,7 @@ Training:
   batch_size: 64
   early_stopping: 5
   wokers: 0
-  save_path: ./save_models/
+  model_save_path: ./save_models/
   data_config:
     input_data_name: "Bleached Softwood Kraft Pulp Futures Historical Data.csv"
     target: "Price"
