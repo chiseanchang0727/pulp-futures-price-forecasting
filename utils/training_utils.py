@@ -3,7 +3,7 @@ import torch
 def train_one_epoch(model, loader, optimizer, criterion, device):
     model.train()
     train_loss = 0.0
-    for _, (X, y) in enumerate(loader):
+    for X, y in loader:
         X, y = X.to(device), y.to(device)
 
         optimizer.zero_grad()
@@ -27,4 +27,4 @@ def evaluate_model(model, loader, criterion, device):
             outputs = model(X_test)
             test_loss += criterion(outputs, y_test).item()
 
-    return test_loss / len(loader), outputs
+    return test_loss / len(loader)

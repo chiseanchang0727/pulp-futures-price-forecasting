@@ -4,7 +4,7 @@ from torch import nn
 from config.train_configs import TrainingConfig
 from training.data_loader import DataModule
 from utils.utils import set_seed, save_model
-from utils.model_utils import create_mlp_model
+from models.models import models
 from utils.training_utils import train_one_epoch, evaluate_model
 
 def evaluate(df, config: TrainingConfig, mode, save=False):
@@ -20,7 +20,7 @@ def evaluate(df, config: TrainingConfig, mode, save=False):
     
     input_size = data_module.full_train_dataset.features.shape[1]
     
-    model, optimizer, scheular = create_mlp_model(input_size, config, device)
+    model, optimizer, scheular = models(input_size, config, device)
         
     criterion = nn.MSELoss()
     
@@ -32,7 +32,7 @@ def evaluate(df, config: TrainingConfig, mode, save=False):
     for epoch in range(config.epochs):
         avg_train_loss = train_one_epoch(model, full_train_data_loader, optimizer, criterion, device)
             
-        avg_test_loss, _ = evaluate_model(model, test_loader, criterion, device)
+        avg_test_loss = evaluate_model(model, test_loader, criterion, device)
         
         if epoch % 1 == 0:
             print(f"Epoch {epoch+1}/{config.epochs} | Train Loss: {avg_train_loss:.4f} | Test Loss: {avg_test_loss:.4f}")

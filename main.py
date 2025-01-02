@@ -4,11 +4,10 @@ import pandas as pd
 import torch
 from utils.utils import YamlLoader
 
-from data_modules.preprocessing import data_preprocessing
+from processing.preprocessing import data_preprocessing
 from training.train_module import train
 from training.eval_module import evaluate
 from training.data_loader import DataModule
-from data_modules.data_for_prediction import create_data_for_prediction
 from predict.predict_futures import predict
 
 
@@ -50,17 +49,18 @@ def main():
 
     elif args.mode == 'predict':
         data_module = DataModule(df=df_preprocessed, config=trainig_configs, mode=args.mode)
-        _, testing_data = data_module.custom_train_test_split(df_preprocessed, config=trainig_configs)
+        # _, testing_data = data_module.custom_train_test_split(df_preprocessed, config=trainig_configs)
         data_loader = data_module.input_data_loader_for_prediction(num_workers=0)
         device = torch.device("cuda" if (torch.cuda.is_available() and trainig_configs.accelerator == "gpu") else "cpu")
 
-        predict(
-            testing_data, 
+        df_y_true_predictions = predict(
             config=trainig_configs, 
             data_loader=data_loader, 
             device=device, 
-            model_path='./save_models/Pulp_Future_Price_nn_2024-12-30-17-16/model.pth'
+            model_path='./save_models/Pulp_Future_Price_nn_2025-01-02-16-46/model.pth'
         )
+
+        df_y_true_predictions.to_csv('./data/prediction_results.csv')
     
     print('end')
 

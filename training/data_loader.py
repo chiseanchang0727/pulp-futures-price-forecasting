@@ -55,7 +55,7 @@ class DataModule(nn.Module):
             
         elif mode == 'predict':
             self.df_all = df
-            
+        
         self.batch_size = config.batch_size
         self.accelerator = torch.device("cuda" if (torch.cuda.is_available() and config.accelerator == "gpu") else "cpu")
         
@@ -67,15 +67,18 @@ class DataModule(nn.Module):
         self.features = df.drop(config.data_config.target, axis=1).columns
         self.target = config.data_config.target
         self.num_features = df.select_dtypes(include=['float64', 'int64']).columns
+        self.scaler = self.__get_scaler()
 
     def cv_setup(self, test_days=30):    
         self.index_dict = {}
         # use TimeSeriesSplit to separate train and valid datasets
         tss = TimeSeriesSplit(n_splits=self.n_fold, test_size=test_days)
         for i, (train_idx, val_idx) in enumerate(tss.split(self.df_train)):
+            train_dates = self.df_train.index[train_idx].tolist()
+            val_dates = self.df_train.index[val_idx].tolist()
             self.index_dict[i] = {
-                "train_idx": train_idx,
-                "val_idx": val_idx
+                "train_idx": train_dates,
+                "val_idx": val_dates
             }
 
     def custom_train_test_split(self, df, config: TrainingConfig):
@@ -84,15 +87,16 @@ class DataModule(nn.Module):
         df_test = df[split_idx:]
 
         return df_train, df_test
+    
+    def __get_scaler(self):
+        return StandardScaler() if self.config.data_config.use_standardization else MinMaxScaler()
 
     def get_fold_loader(self, fold, num_workers):
-
-        scaler = StandardScaler() if self.config.data_config.use_standardization else MinMaxScaler()
 
         # create train_loader
         train_idx = self.index_dict[fold]['train_idx']
         df_train_fold = self.df_train[self.df_train.index.isin(train_idx)]        
-        df_train_fold.loc[:, self.num_features] = scaler.fit_transform(df_train_fold[self.num_features])
+        df_train_fold.loc[:, self.num_features] = self.scaler.fit_transform(df_train_fold[self.num_features])
         self.train_dataset = CustomDataset(
             df_train_fold,
             features=self.features,
@@ -104,7 +108,7 @@ class DataModule(nn.Module):
         # create valid_loader
         val_idx  = self.index_dict[fold]['val_idx']
         df_val_fold = self.df_train[self.df_train.index.isin(val_idx)]
-        df_val_fold.loc[:, self.num_features] = scaler.transform(df_val_fold[self.num_features])
+        df_val_fold.loc[:, self.num_features] = self.scaler.transform(df_val_fold[self.num_features])
         valid_dataset = CustomDataset(
             df_val_fold,
             features=self.features,
@@ -117,8 +121,7 @@ class DataModule(nn.Module):
 
     def get_train_test_data_loader(self, num_workers):
         
-        scaler = StandardScaler() if self.config.data_config.use_standardization else MinMaxScaler()
-        self.df_train.loc[:, self.num_features] = scaler.fit_transform(self.df_train[self.num_features])
+        self.df_train.loc[:, self.num_features] = self.scaler.fit_transform(self.df_train[self.num_features])
         self.full_train_dataset = CustomDataset(
             self.df_train,
             features=self.features,
@@ -128,7 +131,7 @@ class DataModule(nn.Module):
 
         full_train_data_loader = DataLoader(self.full_train_dataset, batch_size=self.batch_size, shuffle=False, num_workers=num_workers)
 
-        self.df_test.loc[:, self.num_features] = scaler.fit_transform(self.df_test[self.num_features])
+        self.df_test.loc[:, self.num_features] = self.scaler.fit_transform(self.df_test[self.num_features])
         test_dataset = CustomDataset(
             self.df_test,
             features=self.features,
@@ -141,6 +144,9 @@ class DataModule(nn.Module):
         return full_train_data_loader, test_loader
     
     def input_data_loader_for_prediction(self, num_workers):
+
+        self.df_all.loc[:, self.num_features] = self.scaler.fit_transform(self.df_all.loc[:, self.num_features])
+
         full_dataset = CustomDataset(
             self.df_all,
             features=self.features,

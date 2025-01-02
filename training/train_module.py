@@ -3,7 +3,7 @@ from torch import nn
 from config.train_configs import TrainingConfig
 from training.data_loader import DataModule
 from utils.utils import set_seed
-from utils.model_utils import create_mlp_model
+from models.models import models
 from utils.training_utils import train_one_epoch, evaluate_model
 
 def train(df, config: TrainingConfig, mode):
@@ -23,7 +23,7 @@ def train(df, config: TrainingConfig, mode):
 
         input_size = data_module.train_dataset.features.shape[1]
 
-        model, optimizer, scheular = create_mlp_model(input_size, config, device)
+        model, optimizer, scheular = models(input_size, config, device)
 
         criterion = nn.MSELoss()  
 

@@ -2,7 +2,6 @@ import re
 import pandas as pd
 from config.train_configs import TrainingConfig
 
-
 def clean_data(input_df: pd.DataFrame) -> pd.DataFrame:
     df = input_df.copy()
     cols = ['Price', 'Open', 'High', 'Low', 'Vol.', 'Change %']

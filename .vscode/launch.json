@@ -10,7 +10,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/main.py",
       "console": "integratedTerminal",
-      "args": ["--mode", "predict"]
+      "args": ["--mode", "train"]
     }
   ]
 }

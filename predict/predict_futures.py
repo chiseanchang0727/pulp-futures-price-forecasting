@@ -1,9 +1,10 @@
+import pandas as pd
 import torch
 from config.train_configs import TrainingConfig
-from utils.model_utils import create_mlp_model
+from models.models import create_mlp_model
 from utils.utils import set_seed
 
-def predict(df, config: TrainingConfig, data_loader, device, model_path):
+def predict(config: TrainingConfig, data_loader, device, model_path):
     """
     Function to predict results using the saved model.
 
@@ -19,23 +20,26 @@ def predict(df, config: TrainingConfig, data_loader, device, model_path):
 
     set_seed(config.seed)
 
-    # Prepare the test dataset
-    test_features = df.drop(columns=config.data_config.target).values  
+    for X, y_true in data_loader:
 
-    # Load the model
-    input_size = test_features.shape[1]
-    model, _, _ = create_mlp_model(input_size, config, device)
-    model.load_state_dict(torch.load(model_path))
-    model.to(device)
-    model.eval()
+        # Load the model
+        input_size = X.shape[1]
+        model, _, _ = create_mlp_model(input_size, config, device)
+        model.load_state_dict(torch.load(model_path))
+        model.to(device)
+        model.eval()
 
-    predictions = []
+        predictions = []
 
+        with torch.no_grad():
 
-    with torch.no_grad():
-        for batch in data_loader:
-            inputs = batch[0].to(device)
+            inputs = X.to(device)
             outputs = model(inputs)
             predictions.extend(outputs.cpu().numpy())
 
-    return predictions
+    df_y_true_predictions =  pd.DataFrame({
+        "y_true": y_true,
+        "preidctions": predictions
+    })[:7] # only get the first 7 days
+
+    return df_y_true_predictions

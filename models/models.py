@@ -24,3 +24,14 @@ def create_mlp_model(input_size, config: TrainingConfig, device):
         )
 
     return model, optimizer, scheular
+
+
+
+
+
+def models(input_size, config: TrainingConfig, device):
+
+    model, optimizer, scheular = create_mlp_model(input_size, config , device)
+
+
+    return model, optimizer, scheular
