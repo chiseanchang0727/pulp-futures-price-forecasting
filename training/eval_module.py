@@ -22,7 +22,7 @@ def evaluate(df, config: TrainingConfig, mode, save=False):
     
     model, optimizer, scheular = models(input_size, config, device)
         
-    criterion = nn.MSELoss()
+    criterion = nn.L1Loss()
     
     print('Full-training start!')
     
