@@ -1,6 +1,6 @@
 import re
 import pandas as pd
-from config.train_configs import TrainingConfig
+from configs.train_configs import TrainingConfig
 
 def clean_data(input_df: pd.DataFrame) -> pd.DataFrame:
     df = input_df.copy()
@@ -69,6 +69,9 @@ def feature_engineering(input_df: pd.DataFrame) -> pd.DataFrame:
     df.fillna(0, inplace=True)
 
     return df
+
+
+    #TODO: encoding cyclical feature
 
 def data_preprocessing(raw_data: pd.DataFrame, config:TrainingConfig) -> pd.DataFrame:
 

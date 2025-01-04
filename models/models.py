@@ -1,7 +1,7 @@
 from torch import optim
-from config.train_configs import TrainingConfig
+from configs.train_configs import TrainingConfig
 
-def create_mlp_model(input_size, config: TrainingConfig, device):
+def initialize_mlp_components(input_size, config: TrainingConfig, device):
     from models.mlp import MLP
     
     model = MLP(
@@ -27,11 +27,18 @@ def create_mlp_model(input_size, config: TrainingConfig, device):
 
 
 
+def initialize_lstm_components(input_size, config: TrainingConfig, device):
+    from models.lstm import LSTMModel
+
+    model = LSTMModel(
+
+    )
+
 
 
 def models(input_size, config: TrainingConfig, device):
 
-    model, optimizer, scheular = create_mlp_model(input_size, config , device)
+    model, optimizer, scheular = initialize_mlp_components(input_size, config , device)
 
 
     return model, optimizer, scheular

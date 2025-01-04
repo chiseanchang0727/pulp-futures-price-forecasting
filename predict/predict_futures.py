@@ -1,6 +1,6 @@
 import pandas as pd
 import torch
-from config.train_configs import TrainingConfig
+from configs.train_configs import TrainingConfig
 from models.models import create_mlp_model
 from utils.utils import set_seed
 

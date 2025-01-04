@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
-from config.data_configs import DataConfig
-from config.ml_configs import NNHyperparameters
-from config.scheduler_configs import SchedulerConfig
+from configs.data_configs import DataConfig
+from configs.ml_configs import NNHyperparameters, LSTMHyperparameters
+from configs.scheduler_configs import SchedulerConfig
 from typing import List, Optional
 
 class TrainingConfig(BaseModel):
@@ -12,6 +12,10 @@ class TrainingConfig(BaseModel):
     model_nn: NNHyperparameters = Field(
         default_factory=NNHyperparameters,
         description="Neural network hyperparameter configuration."
+    )
+
+    model_lstm: LSTMHyperparameters = Field(
+        default_factory=LSTMHyperparameters
     )
 
     scheduler: SchedulerConfig = Field(

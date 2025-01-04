@@ -15,7 +15,7 @@ def get_argument():
     parser = argparse.ArgumentParser()
     
     parser.add_argument('--data_path', required=False, default='./data/')
-    parser.add_argument('--config_path', required=False, default='configs_mlp.yaml', help="Pass the path of configs file.")
+    parser.add_argument('--config_path', required=False, default='./training_configs/configs_lstm.yaml', help="Pass the path of configs file.")
 
     parser.add_argument('--mode', required=False, choices=['train', 'eval', 'predict'])
     parser.add_argument('--save', required=False, action='store_true', help="save the model weights.")

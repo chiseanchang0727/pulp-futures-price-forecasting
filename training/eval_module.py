@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 from torch import nn
-from config.train_configs import TrainingConfig
+from configs.train_configs import TrainingConfig
 from training.data_loader import DataModule
 from utils.utils import set_seed, save_model
 from models.models import models

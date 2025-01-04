@@ -19,18 +19,14 @@ Training:
       - Change %
     features:
     use_standardization: False
-  model_nn:
+
+  model_lstm:
     lr: 1e-2
-    n_hidden:
-      - 16
-      - 32
-      - 32
-      - 16
+    hidden_size: 32 # Size of the LSTM hidden state
+    num_layers: 1 # Number of LSTM layers (stacked)
+    dropout: 0.2 # Dropout between LSTM layers (if num_layers > 1)
     weight_decay: 1e-3
-    dropout:
-      - 0.1
-      - 0.2
-      - 0.3
+
   scheduler:
     type: "ReduceLROnPlateau"
     factor: 0.5
@@ -38,4 +34,4 @@ Training:
     min_lr: 1e-5
 
 Prediction:
-  timewindow: 30 # in days
+  timewindow: 7 # in days
