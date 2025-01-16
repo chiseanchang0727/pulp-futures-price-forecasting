@@ -1,7 +1,7 @@
 import pandas as pd
 import torch
 from configs.train_configs import TrainingConfig
-from models.models import create_mlp_model
+from models.models import models
 from utils.utils import set_seed
 
 def predict(config: TrainingConfig, data_loader, device, model_path):
@@ -24,7 +24,7 @@ def predict(config: TrainingConfig, data_loader, device, model_path):
 
         # Load the model
         input_size = X.shape[1]
-        model, _, _ = create_mlp_model(input_size, config, device)
+        model, _, _ = models(input_size, config, device)
         model.load_state_dict(torch.load(model_path))
         model.to(device)
         model.eval()

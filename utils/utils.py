@@ -7,7 +7,7 @@ import yaml
 import pandas as pd
 import math
 from utils.enums import ConfigType
-from config.train_configs import TrainingConfig
+from configs.train_configs import TrainingConfig
 
 
 

@@ -48,6 +48,10 @@ class LSTMHyperparameters(BaseModel):
         description="Dropout rate for LSTM (applied between stacked layers)."
     )
 
+    batch_first: bool = Field(
+        default=True
+    )
+
     weight_decay: float = Field(
         default=1e-4,
         description="Weight decay (L2 regularization) for better convergence."

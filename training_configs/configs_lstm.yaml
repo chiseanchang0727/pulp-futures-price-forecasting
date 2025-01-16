@@ -23,6 +23,7 @@ Training:
   model_lstm:
     lr: 1e-2
     hidden_size: 32 # Size of the LSTM hidden state
+    sequence_length: 14
     num_layers: 1 # Number of LSTM layers (stacked)
     dropout: 0.2 # Dropout between LSTM layers (if num_layers > 1)
     weight_decay: 1e-3
